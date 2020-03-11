@@ -93,10 +93,13 @@ def detectFaces(minutesToDetect=0.25):
 		key = cv2.waitKey(1) & 0xFF
 		# 	# if the `q` key was pressed, break from the loop
 		if key == ord("q"):
+			cv2.destroyAllWindows()	
+			vs.stop()
 			break
 	return names
+
+# detectFaces(time to capture video in minutes)
+print(detectFaces(0.15))
+# do a bit of cleanup
 cv2.destroyAllWindows()	
 vs.stop()
-# detectFaces(time to capture video in minutes)
-# print(detectFaces(0.15))
-# do a bit of cleanup
