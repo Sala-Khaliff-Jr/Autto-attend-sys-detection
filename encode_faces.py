@@ -22,7 +22,7 @@ import os
 
 # args = vars(ap.parse_args())
 
-detectionMethod = "cnn"
+detectionMethod = "hog"
 
 # grab the paths to the input images in our dataset
 print("[INFO] quantifying faces...")
