@@ -1,26 +1,9 @@
-# USAGE
-# python recognize_faces_video.py --encodings encodings.pickle
-# python recognize_faces_video.py --encodings encodings.pickle --output output/jurassic_park_trailer_output.avi --display 0
-# import the necessary packages
-
 from imutils.video import VideoStream
 import face_recognition
 import imutils
 import pickle
 import time
 import cv2
-
-# construct the argument parser and parse the arguments
-# ap = argparse.ArgumentParser()
-# ap.add_argument("-e", "--encodings", required=True,
-# 	help="path to serialized db of facial encodings")
-# ap.add_argument("-o", "--output", type=str,
-# 	help="path to output video")
-# ap.add_argument("-y", "--display", type=int, default=1,
-# 	help="whether or not to display output frame to screen")
-# ap.add_argument("-d", "--detection-method", type=str, default="cnn",
-# 	help="face detection model to use: either `hog` or `cnn`")
-# args = vars(ap.parse_args())
 
 # load the known faces and embeddings
 print("[INFO] loading encodings...")
@@ -41,7 +24,7 @@ def detectFaces(minutesToDetect=0.25):
 	while time.time() < t_end:
 		# grab the frame from the threaded video stream
 		frame = vs.read()
-		
+
 		# convert the input frame from BGR to RGB then resize it to have
 		# a width of 750px (to speedup processing)
 		rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -55,7 +38,6 @@ def detectFaces(minutesToDetect=0.25):
 			model=detectionMethod)
 		encodings = face_recognition.face_encodings(rgb, boxes)
 		
-		# names = []
 		# loop over the facial embeddings
 		for encoding in encodings:
 			# attempt to match each face in the input image to our known
@@ -71,13 +53,11 @@ def detectFaces(minutesToDetect=0.25):
 				# was matched
 				matchedIdxs = [i for (i, b) in enumerate(matches) if b]
 				counts = {}
-
 				# loop over the matched indexes and maintain a count for
 				# each recognized face face
 				for i in matchedIdxs:
 					name = data["names"][i]
 					counts[name] = counts.get(name, 0) + 1
-
 				# determine the recognized face with the largest number
 				# of votes (note: in the event of an unlikely tie Python
 				# will select first entry in the dictionary)
@@ -103,33 +83,20 @@ def detectFaces(minutesToDetect=0.25):
 			cv2.putText(frame, name, (left, y), cv2.FONT_HERSHEY_SIMPLEX,
 				0.75, (0, 255, 0), 2)
 
-		# if the video writer is None *AND* we are supposed to write
-		# the output video to disk initialize the writer
-		# if writer is None and args["output"] is not None:
-		# if writer is None:
-		# 	fourcc = cv2.VideoWriter_fourcc(*"MJPG")
-		# 	writer = cv2.VideoWriter(args["output"], fourcc, 20,
-		# 		(frame.shape[1], frame.shape[0]), True)
-
 		# if the writer is not None, write the frame with recognized
 		# faces todisk
 		if writer is not None:
 			writer.write(frame)	
-
-		# check to see if we are supposed to display the output frame to
-		# the screen
-		# if args["display"] > 0:
+		#comment the below lines until aboce return statement to use as module 
 		cv2.imshow("Frame", frame)
 		cv2.waitKey(1)
 		key = cv2.waitKey(1) & 0xFF
-
 		# 	# if the `q` key was pressed, break from the loop
 		if key == ord("q"):
 			break
 	return names
-
-print(detectFaces(0.15))
-
-# do a bit of cleanup
 cv2.destroyAllWindows()	
 vs.stop()
+# detectFaces(time to capture video in minutes)
+# print(detectFaces(0.15))
+# do a bit of cleanup
